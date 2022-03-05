@@ -78,9 +78,9 @@ WSGI_APPLICATION = 'web2.wsgi.application'
 DATABASES = {
     'default': {
       'ENGINE': 'django.db.backends.mysql',
-      'NAME': 'hope',   # 数据库名
-      'USER': 'hope',    # 数据库 用户名
-      'PASSWORD': 'Mima123$',# 数据库 用户密码
+      'NAME': '****',   # 数据库名
+      'USER': '****',    # 数据库 用户名
+      'PASSWORD': '****',# 数据库 用户密码
       'HOST': '127.0.0.1', # 数据库服务主机名
       'PORT': '3306',      # 数据库服务端口
       'CONN_MAX_AGE': 0
