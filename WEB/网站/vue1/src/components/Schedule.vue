@@ -1,5 +1,8 @@
 <template>
   <div id="dsc1" @mousewheel="mouseWheel">
+    
+    <img src="../assets/home.png" id="dimage3" @click.left="backimage">
+    <img src="../assets/back.png" id="dimage4" @click.left="back">
     <list :year="year" :week="week" :day="1" weekc="星期一" id="Mon" />
     <list :year="year" :week="week" :day="2" weekc="星期二" id="Tue" />
     <list :year="year" :week="week" :day="3" weekc="星期三" id="Wed" />
@@ -39,17 +42,17 @@ export default {
     List,
   },
   methods: {
-    mouseWheel(e) {
-      if (e.wheelDelta || e.detail) {
-        if (e.wheelDelta > 0 || e.detail < 0) {
-          //当鼠标滚轮向上滚动时
-         
-        }
-        if (e.wheelDelta < 0 || e.detail > 0) {
-          //当鼠标滚轮向下滚动时
-        }
-      }
-    },
+    backimage(){
+        
+        window.location.replace("http://124.71.219.191/");
+
+      },
+
+      back(){
+        this.$router.back()
+      },
+    
+    
   },
 
   computed: {
@@ -167,4 +170,26 @@ export default {
   top: 375px;
   left: 60px;
 }
+
+#dimage3 {
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+    top: 10px;
+    left: 1240px;
+
+  }
+
+
+  #dimage4 {
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+    top: 50px;
+    left: 1240px;
+
+  }
+
 </style>

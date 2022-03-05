@@ -8,6 +8,7 @@ import Sign from '../components/Sign'
 import Skill from '../components/Skill'
 import docx from '../components/docx'
 import Excerptlist from '../components/Excerptlist'
+import Websitemarks from '../components/Websitemarks'
 
 
 //创建路由器
@@ -42,6 +43,11 @@ export default new VueRouter({
         {
             path:'/excerptlist',
             component:Excerptlist
+        },
+        {
+            path:'/web',
+            component:Websitemarks
+
         }
     ]
 })

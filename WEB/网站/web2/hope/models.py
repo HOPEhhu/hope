@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 
 # Create your models here.
@@ -38,4 +39,10 @@ class Schedule(models.Model):
 class Excerpt(models.Model):
     #内容
     content = models.TextField(null=True)
+
+
+class Webmark(models.Model):
+    #网站名
+    webname = models.CharField(max_length=200,null=True)
+    weburl = models.CharField(max_length=200,null=True)
 

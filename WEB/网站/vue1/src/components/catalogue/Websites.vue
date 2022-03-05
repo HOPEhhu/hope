@@ -1,12 +1,12 @@
 <template>
   <div id="dw1">
     <p id="pw1">1</p>
-    <p id="pw2">常用网站</p>
+    <router-link to="/web" id="pw2">常用网站</router-link><br>
     <select id="shortselect" v-model="selected">
       <option value="baidu">百度</option>
       <option value="bing">必应</option>
     </select>
-    <input type="text" id="iw2" @keyup.enter="search">
+    <input type="text" id="iw2" @keyup.enter="search" autocomplete="off">
     <table>
       <tr>
         <td>
@@ -35,7 +35,7 @@
           <a href="https://huaban.com/home/" target="_blank">花瓣 </a>
         </td>
         <td>
-          <a href="hhttps://mail.qq.com/" target="_blank">QQmail </a>
+          <a href="https://mail.qq.com/" target="_blank">QQmail </a>
         </td>
         <td>
           <a href="https://mail.hhu.edu.cn/" target="_blank">河海邮箱 </a>
@@ -105,6 +105,7 @@
     font-size: 24px;
     margin: 0%;
     line-height: 45px;
+    text-decoration: none;
     font-weight: 600;
   }
 
@@ -125,6 +126,7 @@
     border: none;
     border-bottom: 2px solid black;
     background-color:inherit;
+    font-size: 20px;
   }
 
   a {

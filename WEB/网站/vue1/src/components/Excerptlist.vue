@@ -1,6 +1,9 @@
 <template>
-    
+
     <div id="dexcerpt1">
+
+        <img src="../assets/home.png" id="dimage3" @click.left="backimage">
+        <img src="../assets/back.png" id="dimage4" @click.left="back">
         <p>摘录</p>
         <table>
             <Excerptitem v-for="excerpt in excerpts" :key="excerpt.id" :excerpt="excerpt"
@@ -26,7 +29,9 @@
         data() {
             return {
                 excerptss: [],
-                excerpts: []
+                excerpts: [],
+                currentval:1,
+
             }
         },
         computed: {
@@ -43,7 +48,7 @@
                 .then(function (value) {
                     console.log(value)
                     that.excerptss = value.data.retlist;
-                    that.excerpts = that.excerptss.slice(0,5)
+                    that.excerpts = that.excerptss.slice(0, 5)
                 })
                 .catch(function (reason) {
                     console.log(reason)
@@ -57,9 +62,16 @@
 
 
         methods: {
+            backimage() {
+                window.location.replace("http://124.71.219.191/");
+            },
+            back() {
+                this.$router.back()
+            },
 
             handleCurrentChange(val) {
-                this.excerpts = this.excerptss.slice((val - 1) * 5, val * 5 );
+                this.excerpts = this.excerptss.slice((val - 1) * 5, val * 5);
+                this.currentval=val
             },
 
             //添加
@@ -75,7 +87,7 @@
                         if (response.data.ret == 0) {
                             const todoObj = { id: response.data.id, content: e.target.value };
                             that.excerptss.push(todoObj);
-                            console.log(e.target.value);
+                            that.excerpts = that.excerptss.slice((that.currentval - 1) * 5, that.currentval * 5);
                             e.target.value = "";
 
                             console.log(response.data.id)
@@ -137,32 +149,33 @@
 
     textarea {
         width: 800px;
-        height: 60px;
+        height: 80px;
         border: none;
         border-bottom: 2px solid black;
         background-color: inherit;
         font-family: "汇文明朝体", "SimSun";
         font-size: 20px;
         position: absolute;
-        top: 650px;
-        left: 180px;
+        top: 620px;
+        left: 220px;
     }
 
     #pexcerpt1 {
         font-size: 24px;
         position: absolute;
         top: 620px;
-        left: 110px;
+        left: 130px;
     }
 
     table {
         font-size: 24px;
         position: absolute;
-        left: 180px;
+        left: 220px;
         top: 55px;
 
     }
-    p{
+
+    p {
         font-size: 64px;
         margin: auto;
         color: rgb(193, 33, 31);
@@ -174,5 +187,27 @@
         position: absolute;
         top: 560px;
         left: 180px;
+    }
+
+
+    #dimage3 {
+        position: absolute;
+
+        width: 30px;
+        height: 30px;
+        top: 10px;
+        left: 1240px;
+
+    }
+
+
+    #dimage4 {
+        position: absolute;
+
+        width: 30px;
+        height: 30px;
+        top: 50px;
+        left: 1240px;
+
     }
 </style>

@@ -1,5 +1,8 @@
 <template>
   <div id="dbook1">
+    
+    <img src="../assets/home.png" id="dimage3" @click.left="backimage">
+    <img src="../assets/back.png" id="dimage4" @click.left="back">
     <h1 id="hbook1">书单</h1>
     <!--显示书籍详细信息-->
     <div class="dbook2" v-if="showbook">
@@ -87,6 +90,15 @@ export default {
     };
   },
   methods: {
+    backimage(){
+        
+        window.location.replace("http://124.71.219.191/");
+
+      },
+
+      back(){
+        this.$router.back()
+      },
     show(id) {
       this.books.forEach((book) => {
         if (book.id === id) {
@@ -228,9 +240,9 @@ export default {
 <style scoped>
 #hbook1 {
   color: rgb(193, 33, 31);
-  font-size: 36px;
+  font-size: 64px;
   margin: 0%;
-  line-height: 42px;
+  line-height: 70px;
   text-align: center;
 }
 
@@ -252,7 +264,7 @@ table {
   top: 50px;
   left: 660px;
   font-size: 24px;
-  width: 500px;
+  width: 550px;
   line-height: 42px;
 }
 .dbook2 {
@@ -265,6 +277,29 @@ table {
   
   
 }
+
+
+#dimage3 {
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+    top: 10px;
+    left: 1240px;
+
+  }
+
+
+  #dimage4 {
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+    top: 50px;
+    left: 1240px;
+
+  }
+
 .elbooklist1 {
   position: absolute;
   top: 560px;

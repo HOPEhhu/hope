@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/signin', signin),
     path('api/docx',docx1),  #文章内容详情
     path('api/sort',sort1),  #文章目录
-    path('api/excerpt',excerpt) #摘录
+    path('api/excerpt',excerpt), #摘录
+    path('api/web', webmark) #网站
 ]

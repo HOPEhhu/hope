@@ -1,6 +1,9 @@
 <!--文章目录页，根据传递过来类别的不同，显示不同的文章-->
 <template>
     <div id="dskill1">
+        
+    <img src="../assets/home.png" id="dimage3" @click.left="backimage">
+    <img src="../assets/back.png" id="dimage4" @click.left="back">
         <p>{{$route.query.sort}}</p>
         <ul>
             <li v-for="m in filelist" :key="m.id"><!--显示文章目录-->
@@ -14,9 +17,9 @@
                     }
         
                 }" >
-                {{m.name}}
-                <!--将名字的后缀去掉
-                {{m.name.split(".")[0]}}-->
+                
+                <!--将名字的后缀去掉-->
+                {{m.name.split(".")[0]}}
             </router-link>
             </li>
         </ul>
@@ -38,6 +41,15 @@
             }
         },
         methods: {
+            backimage(){
+        
+        window.location.replace("http://124.71.219.191/");
+
+      },
+
+      back(){
+        this.$router.back()
+      },
 
         },
 
@@ -98,4 +110,26 @@
         text-decoration: none;
         color: black;
     }
+    
+#dimage3 {
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+    top: 10px;
+    left: 1240px;
+
+  }
+
+
+  #dimage4 {
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+    top: 50px;
+    left: 1240px;
+
+  }
+
 </style>
