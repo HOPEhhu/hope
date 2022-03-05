@@ -1,0 +1,12 @@
+让启动脚本符合linux文本格式，并且有可执行权限：
+dos2unix run.sh
+chmod +x run.sh
+
+启动后端：./run.sh
+
+查看后端进程：pstree -ap|grep gunicorn
+
+结束后端进程：kill -9 xxxx
+
+文件上传时要以utf-8格式
+

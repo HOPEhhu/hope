@@ -1,0 +1,2 @@
+将代码转为部署版本：npm run build
+在部署前要将所有的localhost:8080改为服务器地址
