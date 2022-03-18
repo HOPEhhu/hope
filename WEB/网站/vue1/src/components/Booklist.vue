@@ -1,8 +1,5 @@
 <template>
   <div id="dbook1">
-    
-    <img src="../assets/home.png" id="dimage3" @click.left="backimage">
-    <img src="../assets/back.png" id="dimage4" @click.left="back">
     <h1 id="hbook1">书单</h1>
     <!--显示书籍详细信息-->
     <div class="dbook2" v-if="showbook">
@@ -10,7 +7,8 @@
       <p>作者：{{ showauthor }}</p>
       <p>字数：{{ showwordcount }}</p>
       <p>时间：{{ showreadtime }}</p>
-      <p>读后感：{{ showremark }}</p>
+      <p>读后感：</p>
+      <p><textarea rows="13" cols="45" v-model="showremark"></textarea></p>
       <button @click="add1" >添加</button>
       <button @click="change1" >修改</button>
       <button @click="delete1" >删除</button>
@@ -24,7 +22,7 @@
         <p>字数：<input type="text" v-model="showwordcount" /></p>
         <p>时间：<input type="text" v-model="showreadtime" /></p>
         <p>读后感：</p>
-        <p><textarea rows="10" cols="30" v-model="showremark"></textarea></p>
+        <p><textarea rows="13" cols="45" v-model="showremark"></textarea></p>
         <button @click="change2" >提交</button>
         <button @click="back1" >返回</button>
       
@@ -38,7 +36,7 @@
         <p>字数：<input type="text" v-model="showwordcount" /></p>
         <p>时间：<input type="text" v-model="showreadtime" /></p>
         <p>读后感：</p>
-        <p><textarea rows="10" cols="30" v-model="showremark"></textarea></p>
+        <p><textarea rows="13" cols="45" v-model="showremark"></textarea></p>
         <button @click="add2" >提交</button>
         <button @click="back1" >返回</button>
       
@@ -90,15 +88,6 @@ export default {
     };
   },
   methods: {
-    backimage(){
-        
-        window.location.replace("http://124.71.219.191/");
-
-      },
-
-      back(){
-        this.$router.back()
-      },
     show(id) {
       this.books.forEach((book) => {
         if (book.id === id) {
@@ -115,7 +104,7 @@ export default {
     change2() {
       var that = this;
       axios
-        .post("http://124.71.219.191/api/book", {
+        .post(window.a+"/api/book", {
           action: "modify_book",
           id: that.showid,
           newdata: {
@@ -144,7 +133,7 @@ export default {
     add2() {
       var that = this;
       axios
-        .post("http://124.71.219.191/api/book", {
+        .post(window.a+"/api/book", {
           action: "add_book",
           data: {
             bookname: that.showbookname,
@@ -181,7 +170,7 @@ export default {
         alert("确定要删除吗？")
       var that = this;
       axios
-        .post("http://124.71.219.191/api/book", {
+        .post(window.a+"/api/book", {
           action: "del_book",
           id: that.showid,
         })
@@ -224,7 +213,7 @@ export default {
   mounted() {
     var that = this;
     axios
-      .get("http://124.71.219.191/api/book?action=list_book")
+      .get(window.a+"/api/book?action=list_book")
       .then(function (value) {
         that.bookss = value.data.retlist;
         that.books = that.bookss.slice(0,10)
@@ -279,27 +268,6 @@ table {
 }
 
 
-#dimage3 {
-    position: absolute;
-
-    width: 30px;
-    height: 30px;
-    top: 10px;
-    left: 1240px;
-
-  }
-
-
-  #dimage4 {
-    position: absolute;
-
-    width: 30px;
-    height: 30px;
-    top: 50px;
-    left: 1240px;
-
-  }
-
 .elbooklist1 {
   position: absolute;
   top: 560px;
@@ -327,10 +295,7 @@ input{
 }
 
 textarea{
-    width: 375px;
-    height: 180px;
-    border: none;
-    border-bottom: 2px solid black;
+    border: 2px solid black;
     background-color:inherit;
     font-family: "汇文明朝体", "SimSun";
     font-size: 20px;

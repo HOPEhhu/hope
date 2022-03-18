@@ -1,9 +1,6 @@
 <template>
 
     <div id="dexcerpt1">
-
-        <img src="../assets/home.png" id="dimage3" @click.left="backimage">
-        <img src="../assets/back.png" id="dimage4" @click.left="back">
         <p>摘录</p>
         <table>
             <Excerptitem v-for="excerpt in excerpts" :key="excerpt.id" :excerpt="excerpt"
@@ -40,7 +37,7 @@
 
         mounted() {
             var that = this;
-            axios.get("http://124.71.219.191/api/excerpt", {
+            axios.get(window.a+"/api/excerpt", {
                 params: {
                     "action": "list_excerpt",
                 }
@@ -62,13 +59,6 @@
 
 
         methods: {
-            backimage() {
-                window.location.replace("http://124.71.219.191/");
-            },
-            back() {
-                this.$router.back()
-            },
-
             handleCurrentChange(val) {
                 this.excerpts = this.excerptss.slice((val - 1) * 5, val * 5);
                 this.currentval=val
@@ -77,7 +67,7 @@
             //添加
             add(e) {
                 var that = this;
-                axios.post("http://124.71.219.191/api/excerpt", {
+                axios.post(window.a+"/api/excerpt", {
                     "action": "add_excerpt",
                     "data": {
                         "content": e.target.value,
@@ -108,7 +98,7 @@
             //删除
             deleteExcerpt(id) {
                 this.excerpts = this.excerpts.filter((excerpt) => {
-                    axios.post("http://124.71.219.191/api/excerpt", {
+                    axios.post(window.a+"/api/excerpt", {
                         "action": "del_excerpt",
                         "data": {
                             "id": id,
@@ -190,24 +180,4 @@
     }
 
 
-    #dimage3 {
-        position: absolute;
-
-        width: 30px;
-        height: 30px;
-        top: 10px;
-        left: 1240px;
-
-    }
-
-
-    #dimage4 {
-        position: absolute;
-
-        width: 30px;
-        height: 30px;
-        top: 50px;
-        left: 1240px;
-
-    }
 </style>

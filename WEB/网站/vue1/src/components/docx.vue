@@ -1,9 +1,8 @@
 <template>
+
     <div id="ddocx1">
-        
-    <img src="../assets/home.png" id="dimage3" @click.left="backimage">
-    <img src="../assets/back.png" id="dimage4" @click.left="back">
-        <div v-html="message1" id="ddocx2"></div>  <!--显示文章详情-->
+        <div v-html="message1" id="ddocx2"></div>
+        <!--显示文章详情-->
         <div id="ddocx3"></div>
     </div>
 
@@ -21,23 +20,14 @@
             }
         },
         methods: {
-            backimage(){
-        
-        window.location.replace("http://124.71.219.191/");
-
-      },
-
-      back(){
-        this.$router.back()
-      },
         },
         mounted() {
             //获取文章内容详情，获得的格式为html格式，传递两个参数。文章类别和文章名
             var that = this;
-            axios.get("http://124.71.219.191/api/docx", {
+            axios.get(window.a + "/api/docx", {
                 params: {
-                    "sort":that.$route.query.sort,
-                    "name":that.$route.query.name,
+                    "sort": that.$route.query.sort,
+                    "name": that.$route.query.name,
                 }
             })
                 .then(function (value) {
@@ -52,7 +42,7 @@
 
 
         },
-        
+
 
     };
 </script>
@@ -62,10 +52,10 @@
         width: 1280px;
 
         margin: auto;
-        
+
         position: absolute;
         background-color: white;
-        font-family:'Courier New', Courier, monospace;
+        font-family: 'Courier New', Courier, monospace;
 
         /*background-color: rgb(240 241 245);
         background-image: linear-gradient(rgb(210 213 219) 1px, transparent 1px),
@@ -73,39 +63,20 @@
         background-size: 20px 20px;
         */
     }
-    #ddocx2{
+
+    #ddocx2 {
         width: 1000px;
         font-size: 24px;
         margin: auto;
-        
+
     }
 
-    #ddocx3{
+    #ddocx3 {
         width: 1280px;
         height: 200px;
-        
+
     }
-
-    
-#dimage3 {
-    position: absolute;
-
-    width: 30px;
-    height: 30px;
-    top: 10px;
-    left: 1240px;
-
-  }
-
-
-  #dimage4 {
-    position: absolute;
-
-    width: 30px;
-    height: 30px;
-    top: 50px;
-    left: 1240px;
-
-  }
-
+>>>code{
+    background-color: darkgrey;
+}
 </style>

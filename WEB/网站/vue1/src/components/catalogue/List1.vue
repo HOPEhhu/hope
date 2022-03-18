@@ -34,7 +34,7 @@
 
 
 
-      axios.get("http://124.71.219.191/api/schedule", {
+      axios.get(window.a+"/api/schedule", {
         params: {
           "action": "list_schedule",
           "time": this.time,
@@ -57,7 +57,7 @@
         this.todos.forEach((todo) => {
           if (todo.id === id) {
             todo.finish = !todo.finish
-            axios.post("http://124.71.219.191/api/schedule", {
+            axios.post(window.a+"/api/schedule", {
               "action": "check_schedule",
               "data": {
                 "id": id,

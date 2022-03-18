@@ -22,7 +22,9 @@
             </router-link>
         </p>
 
-        <p class="ph3">收藏</p>
+        <p>
+            <router-link to="/collect" class="rhobby1">收藏</router-link>
+        </p>
 
 
 

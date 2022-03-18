@@ -10,6 +10,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue'
 import VueRouter from 'vue-router'
 
+import './components/global.js'
+
 //引入路由器
 import router from './router'
 //关闭vue 生产提示

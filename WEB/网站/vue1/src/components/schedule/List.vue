@@ -6,9 +6,10 @@
       {{weekc}}
     </div>
     <table>
-      <Item v-for="todo in todos" :key="todo.id" :todo="todo" :checkTodo="checkTodo" :deleteTodo="deleteTodo" />
+      <Item v-for="todo in todos" :key="todo.id" :todo="todo" :checkTodo="checkTodo" :deleteTodo="deleteTodo"
+        :remarkTodo="remarkTodo" />
     </table>
-    <input type="text"  @keyup.enter="add" />
+    <input type="text" @keyup.enter="add" v-model="remark" />
   </div>
 </template>
 
@@ -21,7 +22,8 @@
     props: ["year", "week", "day", "weekc"],
     data() {
       return {
-        todos: []
+        todos: [],
+        remark: ""
       }
     },
     computed: {
@@ -48,7 +50,7 @@
     mounted() {
       var that = this;
 
-      axios.get("http://124.71.219.191/api/schedule", {
+      axios.get(window.a + "/api/schedule", {
         params: {
           "action": "list_schedule",
           "time": that.time,
@@ -82,7 +84,7 @@
       cha() {
         var that = this;
 
-        axios.get("http://124.71.219.191/api/schedule", {
+        axios.get(window.a + "/api/schedule", {
           params: {
             "action": "list_schedule",
             "time": that.time,
@@ -103,7 +105,7 @@
       //添加
       add(e) {
         var that = this;
-        axios.post("http://124.71.219.191/api/schedule", {
+        axios.post(window.a + "/api/schedule", {
           "action": "add_schedule",
           "data": {
             "time": that.time,
@@ -114,7 +116,7 @@
             if (response.data.ret == 0) {
               const todoObj = { id: response.data.id, finish: false, content: e.target.value }
               that.todos.push(todoObj)
-              e.target.value = ""
+              that.remark=""
 
               console.log(response.data.id)
             } else if (response.data.ret == 302) {
@@ -134,7 +136,7 @@
         this.todos.forEach((todo) => {
           if (todo.id === id) {
             todo.finish = !todo.finish
-            axios.post("http://124.71.219.191/api/schedule", {
+            axios.post(window.a + "/api/schedule", {
               "action": "check_schedule",
               "data": {
                 "id": id,
@@ -159,7 +161,7 @@
       //删除
       deleteTodo(id) {
         this.todos = this.todos.filter((todo) => {
-          axios.post("http://124.71.219.191/api/schedule", {
+          axios.post(window.a + "/api/schedule", {
             "action": "del_schedule",
             "data": {
               "id": id,
@@ -182,6 +184,33 @@
         })
       },
 
+      //评论
+      remarkTodo(id) {
+        var that = this
+        axios.post(window.a + "/api/schedule", {
+          "action": "modify_schedule",
+            "id": id,
+            newdata: {
+              remark: that.remark
+            }
+
+        })
+          .then(function (response) {
+            if (response.data.ret == 0) {
+              console.log(response.data.ret)
+              that.remark=""
+            } else if (response.data.ret == 302) {
+              alert("未登录")
+              this.$router.push("signin");
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+
+
     },
   };
 </script>
@@ -191,16 +220,17 @@
     width: 190px;
     border: none;
     border-bottom: 2px solid black;
-    background-color:inherit;
+    background-color: inherit;
     position: absolute;
     top: 290px;
 
   }
-  #dlist1{
+
+  #dlist1 {
     color: rgb(193, 33, 31);
     font-size: 18px;
     margin: 0%;
     line-height: 18px;
     text-align: center;
-    }
+  }
 </style>

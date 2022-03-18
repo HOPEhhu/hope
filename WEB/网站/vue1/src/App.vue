@@ -4,9 +4,13 @@
       <p id="p1">{{ hours }}:{{ minutes }}</p>
       <p id="p2">{{ year }}.{{ month }}.{{ date }} {{ week }}</p>
     </div>
+    <div id="d3" v-if="showbutton">
+      <img src="./assets/home.png" class="dimage3" @click.left="backhome">
+      <img src="./assets/refresh.png" class="dimage3" @click.left="refresh">
+      <img src="./assets/back.png" class="dimage3" @click.left="back">
+    </div>
 
-    
-    
+
     <!--.once:只执行一次-->
     <router-view></router-view>
 
@@ -34,16 +38,25 @@
         week: "星期一",
         //时间显示
         showtime: true,
+        showbutton: false,
       };
     },
 
     mounted() {
+      //判断当前页面位置，如果不是在封面，则不显示时间
+      if (window.location.href != window.a +"/#/") {
+          this.showtime = false
+          this.showbutton = true
+        } else {
+          this.showtime = true
+          this.showbutton = false
+        }
+
       //时间
       setInterval(getTime, 500);
       var that = this;
       function getTime() {
         var dateObj = new Date();
-
         var year = dateObj.getFullYear(); //年
         var month = dateObj.getMonth() + 1; //月  (注意：月份+1)
         var date = dateObj.getDate(); //日
@@ -92,9 +105,35 @@
 
       ch() {
         this.$router.push("catalogue");
+        //判断当前页面位置，如果不是在封面，则不显示时间
+        if (window.location.href != window.a +"/#/") {
+          this.showtime = false
+          this.showbutton = true
+        } else {
+          this.showtime = true
+          this.showbutton = false
+        }
 
       },
-      
+      backhome() {
+        window.location.replace(window.a + "/");
+      },
+      back() {
+        this.$router.back()
+        //判断当前页面位置，如果是目录，则返回后即为封面
+        if (window.location.href != window.a +"/#/catalogue") {
+          this.showtime = false
+          this.showbutton = true
+        } else {
+          this.showtime = true
+          this.showbutton = false
+        }
+      },
+
+      refresh(){
+        this.$router.go(0);
+      }
+
       //所有页面，滚轮上滑都是返回上一页，初目录下滑重新加载封面外，所有页面下滑都是跳转到目录
 
       /* mouseWheel(e) {
@@ -156,6 +195,14 @@
 
   }
 
+  #d3 {
+    position: absolute;
+    width: 35px;
+    top: 8px;
+    left: 1235px;
+    z-index: 10
+  }
+
 
 
   #p1 {
@@ -167,6 +214,13 @@
   #p2 {
     font-size: 38px;
     text-align: center;
+  }
+
+  .dimage3 {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 10px;
+
   }
 
   @font-face {

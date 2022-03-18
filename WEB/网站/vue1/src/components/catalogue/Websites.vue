@@ -5,6 +5,7 @@
     <select id="shortselect" v-model="selected">
       <option value="baidu">百度</option>
       <option value="bing">必应</option>
+      <option value="csdn">CSND</option>
     </select>
     <input type="text" id="iw2" @keyup.enter="search" autocomplete="off">
     <table>
@@ -13,7 +14,7 @@
           <a href="https://www.zhihu.com" target="_blank"> 知乎 </a>
         </td>
         <td>
-          <a href="https://www.csdn.net/" target="_blank">CSDN </a>
+          <a href="https://www.xiwang.online/" target="_blank">HOPE </a>
         </td>
         <td>
           <a href="https://translate.google.cn/" target="_blank">谷歌翻译 </a>
@@ -32,10 +33,10 @@
       </tr>
       <tr>
         <td>
-          <a href="https://huaban.com/home/" target="_blank">花瓣 </a>
+          <a href="https://mail.qq.com/" target="_blank">邮箱 </a>
         </td>
         <td>
-          <a href="https://mail.qq.com/" target="_blank">QQmail </a>
+          <a href=" https://github.com/" target="_blank">GitHub </a>
         </td>
         <td>
           <a href="https://mail.hhu.edu.cn/" target="_blank">河海邮箱 </a>
@@ -65,7 +66,8 @@
       return {
         selected: "baidu",
         s1: "https://www.baidu.com/s?wd=",
-        s2: "https://www.bing.com/search?q="
+        s2: "https://www.bing.com/search?q=",
+        s3: "https://so.csdn.net/so/search?q="
       }
     },
    
@@ -75,8 +77,11 @@
         if (this.selected == "baidu") {
           window.open(this.s1 + e.target.value)
           e.target.value = ""
-        } else {
+        } else if(this.selected == "baidu") {
           window.open(this.s2 + e.target.value)
+          e.target.value = ""
+        }else{
+          window.open(this.s3 + e.target.value)
           e.target.value = ""
         }
       }
@@ -112,7 +117,7 @@
   #shortselect {
     background-color:inherit;
     height: 28px;
-    width: 58px;
+    width: 65px;
     border: 0px;
     font-family: "汇文明朝体", "SimSun";
     font-size: 20px;
@@ -122,7 +127,7 @@
 
   #iw2 {
     /*输入框 */
-    width: 130px;
+    width: 135px;
     border: none;
     border-bottom: 2px solid black;
     background-color:inherit;
@@ -139,7 +144,7 @@
 
   }
   table{
-    width: 210px;
+    width: 220px;
     text-align: center;
   }
 </style>

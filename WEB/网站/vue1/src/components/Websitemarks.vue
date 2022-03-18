@@ -1,20 +1,74 @@
 <template>
 
     <div id="dexcerpt1">
-        
-    <img src="../assets/home.png" id="dimage3" @click.left="backimage">
-    <img src="../assets/back.png" id="dimage4" @click.left="back">
-        <p>常用网站</p>
-        <table>
-            <Webmarkitem v-for="web in webs" :key="web.id" :web="web"
-                :deleteweb="deleteweb" />
+        <p id="wp1">常用网站</p>
+        <p id="wp2">收藏夹</p>
+
+
+        <table id="wtable1">
+            <tr>
+                <td><a href="http://www.baidu.com/" target="_blank">百度</a></td>
+                <td><a href="https://www.csdn.net/" target="_blank">CSDN</a></td>
+                <td><a href="http://i.chaoxing.com/" target="_blank">学习通</a></td>
+                <td><a href="https://translate.google.cn/" target="_blank">谷歌翻译</a></td>
+            </tr>
+            <tr>
+                <td><a href="http://www.bing.com/" target="_blank">必应</a></td>
+                <td><a href="https://www.bilibili.com/" target="_blank">bilibili</a></td>
+                <td><a href="https://www.amazon.cn/" target="_blank">亚马逊</a></td>
+                <td><a href="https://yjss.hhu.edu.cn/home/stulogin" target="_blank">教学管理</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.zhihu.com" target="_blank">知乎</a></td>
+                <td><a href="https://github.com/" target="_blank">GitHub</a></td>
+                <td><a href="https://account.aliyun.com/" target="_blank">阿里云</a></td>
+                <td><a href="https://mail.hhu.edu.cn/" target="_blank">河海邮箱</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://tieba.baidu.com/index.html" target="_blank">贴吧</a></td>
+                <td><a href=" https://codepen.io/trending" target="_blank">Codepen</a></td>
+                <td><a href="https://auth.huaweicloud.com/" target="_blank">华为云</a></td>
+                <td><a href="https://weread.qq.com/" target="_blank">微信读书</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://huaban.com/home/" target="_blank">花瓣</a></td>
+                <td><a href="https://www.xiwang.online/" target="_blank">HOPE</a></td>
+                <td><a href="https://cloud.tencent.com/" target="_blank">腾讯云</a></td>
+                <td><a href="http://kgbook.com/" target="_blank">苦瓜书盘</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.zcool.com.cn/" target="_blank">站酷</a></td>
+                <td><a href="https://www.google.com/" target="_blank">Google</a></td>
+                <td><a href="https://www.bfg-notice.top/" target="_blank">避风港</a></td>
+                <td><a href="https://www.jiumodiary.com/" target="_blank">鸠摩搜索</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://mail.qq.com/" target="_blank">邮箱</a></td>
+                <td><a href="https://minecraft.fandom.com/zh/wiki/Minecraft_Wiki" target="_blank">Minecraft</a></td>
+                <td><a href="https://www.allhistory.com/" target="_blank">全历史</a></td>
+                <td><a href="https://book.douban.com/" target="_blank">豆瓣读书</a></td>
+            </tr>
+
+
         </table>
+        <!--竖线-->
+        <div class="sx"></div>
+
+        <table id="wtable2">
+            <Webmarkitem v-for="web in webs" :key="web.id" :web="web" :deleteweb="deleteweb" />
+        </table>
+
+        <!--翻页-->
+        <el-pagination class="weblist1" layout="prev, pager, next" :total="webss.length" :page-size="10"
+            @current-change="handleCurrentChange">
+        </el-pagination>
+
+
 
         <p id="pexcerpt1">添加：</p>
         <div id="dweb1">
-            网站名：<input type="text" v-model="webname" />
-            网址：<input type="text" v-model="weburl" />
-            <button @click="add" >提交</button>
+            网站：<input type="text" v-model="webname" />
+            网址：<input type="text" v-model="weburl" @keyup.enter="add" />
         </div>
     </div>
 </template>
@@ -28,9 +82,11 @@
         props: [],
         data() {
             return {
-                webs: [],
-                webname:'',
-                weburl:'',
+                webss: [],
+                webs:[],
+                webname: '',
+                weburl: '',
+                currentval:1,
 
             }
         },
@@ -40,14 +96,17 @@
 
         mounted() {
             var that = this;
-            axios.get("http://124.71.219.191/api/web", {
+            axios.get(window.a + "/api/web", {
                 params: {
                     "action": "list_web",
                 }
             })
                 .then(function (value) {
                     console.log(value)
-                    that.webs = value.data.retlist;
+                    that.webss = value.data.retlist;
+                    that.webs = that.webss.slice(0, 10)
+
+
                 })
                 .catch(function (reason) {
                     console.log(reason)
@@ -61,21 +120,16 @@
 
 
         methods: {
-            backimage(){
-        
-        window.location.replace("http://124.71.219.191/");
-
-      },
-
-      back(){
-        this.$router.back()
-      },
+            handleCurrentChange(val) {
+                this.webs = this.webss.slice((val - 1) * 10, val * 10);
+                this.currentval=val
+            },
 
 
             //添加
             add() {
                 var that = this;
-                axios.post("http://124.71.219.191/api/web", {
+                axios.post(window.a + "/api/web", {
                     "action": "add_web",
                     "data": {
                         "webname": that.webname,
@@ -84,34 +138,32 @@
                 })
                     .then(function (response) {
                         if (response.data.ret == 0) {
-                            const todoObj = { id: response.data.id, webname: that.webname,weburl:that.weburl };
-                            that.webs.push(todoObj);
+                            const todoObj = { id: response.data.id, webname: that.webname, weburl: that.weburl };
+                            that.webss.push(todoObj);
+                            that.webs = that.webss.slice((that.currentval - 1) * 10, that.currentval * 10);
                             that.webname = "";
                             that.weburl = "";
                             console.log(response.data.id)
                         } else if (response.data.ret == 302) {
                             alert("未登录")
                             that.$router.push("signin");
-
                         }
-
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
 
-
+//此处有bug:删除只是将webs和数据库中的内容删除了，webss中的内容没有删除，所以如果删除之后立即添加内容，那么之前删除的内容也会在屏幕上显示
 
             //删除
             deleteweb(id) {
                 this.webs = this.webs.filter((web) => {
-                    axios.post("http://124.71.219.191/api/web", {
+                    axios.post(window.a + "/api/web", {
                         "action": "del_web",
                         "data": {
                             "id": id,
                         }
-
                     })
                         .then(function (response) {
                             if (response.data.ret == 0) {
@@ -158,26 +210,55 @@
         left: 220px;
     }
 
-    #pexcerpt1 {
+    /*添加*/
+    #pexcerpt1 {    
         font-size: 24px;
         position: absolute;
-        top: 620px;
-        left: 200px;
+        top: 600px;
+        left: 666px;
     }
 
-    table {
-        font-size: 24px;
+    /*左面表*/
+    #wtable1 {
         position: absolute;
-        left: 350px;
-        top: 65px;
-
-    }
-
-    p {
-        font-size: 64px;
-        margin: auto;
-        color: rgb(193, 33, 31);
+        width: 500px;
         text-align: center;
+        left: 120px;
+        top: 80px;
+    }
+
+    a {
+        font-size: 32px;
+        color: black;
+        text-decoration: none;
+        line-height: 60px;
+        word-spacing: 22px;
+    }
+
+    /*右面表*/
+    #wtable2 {
+        font-size: 24px;
+        position: absolute;
+        left: 720px;
+        top: 85px;
+
+    }
+
+    #wp1 {
+        font-size: 36px;
+        color: rgb(193, 33, 31);
+        position: absolute;
+        top: 0px;
+        left: 300px;
+
+    }
+
+    #wp2 {
+        font-size: 36px;
+        color: rgb(193, 33, 31);
+        position: absolute;
+        top: 0px;
+        left: 820px;
     }
 
 
@@ -195,43 +276,29 @@
         font-family: "汇文明朝体", "SimSun";
         font-size: 20px;
     }
-    #dweb1{
+
+    /*添加框*/
+    #dweb1 {
         position: absolute;
         top: 650px;
-        left: 250px;
+        left: 700px;
     }
 
-    button{
-   
-   background-color:inherit;
-   height: 28px;
-   width: 60px;
-   border: 0px;
-   font-family: "汇文明朝体", "SimSun";
-   font-size: 20px;
-   margin: 5px, 0px, 5px;
-  
-}
 
-#dimage3 {
-    position: absolute;
+    /*竖线*/
+    .sx {
+        width: 2px;
+        height: 600px;
+        background-color: black;
+        position:absolute;
+        top: 60px;
+        left: 660px;
+    }
 
-    width: 30px;
-    height: 30px;
-    top: 10px;
-    left: 1240px;
-
-  }
-
-
-  #dimage4 {
-    position: absolute;
-
-    width: 30px;
-    height: 30px;
-    top: 50px;
-    left: 1240px;
-
-  }
-
+    /*翻页*/
+    .weblist1{
+        position: absolute;
+        top: 580px;
+        left: 700px;
+    }
 </style>

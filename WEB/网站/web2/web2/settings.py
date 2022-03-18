@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-f34=pl!w2hu4t*yp&wh95j0g^kqks#e3=3_45*tuk_lulm2vf-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','124.71.219.191']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','122.112.199.174', '*']
 
 
 # Application definition
@@ -74,17 +74,11 @@ WSGI_APPLICATION = 'web2.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
-      'ENGINE': 'django.db.backends.mysql',
-      'NAME': '****',   # 数据库名
-      'USER': '****',    # 数据库 用户名
-      'PASSWORD': '****',# 数据库 用户密码
-      'HOST': '127.0.0.1', # 数据库服务主机名
-      'PORT': '3306',      # 数据库服务端口
-      'CONN_MAX_AGE': 0
-  }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 

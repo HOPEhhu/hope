@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <td class="td1"><a :href="web.weburl">{{ web.webname }}</a></td>
+        <td class="td1"><a :href="web.weburl" target="_blank">{{ web.webname }}</a></td>
 
         <td><button @click="handleDelete(web.id)">删除</button></td>
 
@@ -51,6 +51,9 @@
 
     }
     .td1{
-        width: 300px;
+        width: 380px;
     }
+    td{
+    padding:10px;
+}
 </style>

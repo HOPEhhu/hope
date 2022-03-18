@@ -1,12 +1,10 @@
 <!--文章目录页，根据传递过来类别的不同，显示不同的文章-->
 <template>
     <div id="dskill1">
-        
-    <img src="../assets/home.png" id="dimage3" @click.left="backimage">
-    <img src="../assets/back.png" id="dimage4" @click.left="back">
         <p>{{$route.query.sort}}</p>
         <ul>
-            <li v-for="m in filelist" :key="m.id"><!--显示文章目录-->
+            <li v-for="m in filelists" :key="m.id">
+                <!--显示文章目录-->
                 <!--点击文章可跳转至文章详情页，并向详情页传递两个参数，文章类别和文章标题-->
                 <router-link class="routerskill1" :to="{
                     path:'/detail',
@@ -16,13 +14,16 @@
         
                     }
         
-                }" >
-                
-                <!--将名字的后缀去掉-->
-                {{m.name.split(".")[0]}}
-            </router-link>
+                }">
+
+                    <!--将名字的后缀去掉-->
+                    {{m.name.split(".")[0]}}
+                </router-link>
             </li>
         </ul>
+        <el-pagination class="filelist1" layout="prev, pager, next" :total="filelistss.length" :page-size="12"
+            @current-change="handleCurrentChange">
+        </el-pagination>
     </div>
 
 
@@ -35,35 +36,32 @@
         props: [],
         data() {
             return {
-                filelist: []
+                filelistss: [],
+                filelists: [],
+                currentval:1,
 
 
             }
         },
         methods: {
-            backimage(){
-        
-        window.location.replace("http://124.71.219.191/");
-
-      },
-
-      back(){
-        this.$router.back()
-      },
-
+            handleCurrentChange(val) {
+                this.filelists = this.filelistss.slice((val - 1) * 12, val * 12);
+                this.currentval=val
+            },
         },
 
         mounted() {
             //获取文章目录
             var that = this;
-            axios.get("http://124.71.219.191/api/sort", {
+            axios.get(window.a + "/api/sort", {
                 params: {
-                    "sort":that.$route.query.sort  //传递想要获取的文章的类别
+                    "sort": that.$route.query.sort  //传递想要获取的文章的类别
                 }
             })
                 .then(function (value) {
                     console.log(value)
-                    that.filelist = value.data.retlist;
+                    that.filelistss = value.data.retlist;
+                    that.filelists = that.filelistss.slice(0, 12)
                 })
                 .catch(function (reason) {
                     console.log(reason)
@@ -81,10 +79,11 @@
 <style scoped>
     #dskill1 {
         width: 1280px;
-        
+        height: 720px;
+
 
         margin: auto;
-        
+
         position: absolute;
 
         background-color: rgb(240 241 245);
@@ -93,43 +92,29 @@
         background-size: 20px 20px;
     }
 
-    p{
+    p {
         font-size: 64px;
         margin: auto;
         color: rgb(193, 33, 31);
         text-align: center;
     }
-    ul{
+
+    ul {
         width: 800px;
         margin: auto;
     }
 
-    .routerskill1{
+    .routerskill1 {
         font-size: 24px;
-        line-height: 50px;
+        line-height: 45px;
         text-decoration: none;
         color: black;
     }
-    
-#dimage3 {
-    position: absolute;
 
-    width: 30px;
-    height: 30px;
-    top: 10px;
-    left: 1240px;
-
-  }
-
-
-  #dimage4 {
-    position: absolute;
-
-    width: 30px;
-    height: 30px;
-    top: 50px;
-    left: 1240px;
-
-  }
-
+    /*翻页*/
+    .filelist1{
+        position: absolute;
+        top: 625px;
+        left: 260px;
+    }
 </style>

@@ -1,8 +1,5 @@
 <template>
-  <div id="dsc1" @mousewheel="mouseWheel">
-    
-    <img src="../assets/home.png" id="dimage3" @click.left="backimage">
-    <img src="../assets/back.png" id="dimage4" @click.left="back">
+  <div id="dsc1" >
     <list :year="year" :week="week" :day="1" weekc="星期一" id="Mon" />
     <list :year="year" :week="week" :day="2" weekc="星期二" id="Tue" />
     <list :year="year" :week="week" :day="3" weekc="星期三" id="Wed" />
@@ -22,19 +19,30 @@
       format="yyyy 第 WW 周"
       placeholder="选择周"
       class="el1"
+
     />
+
+    <!--笔记本-->
+    <textarea rows="18" cols="53" v-model="note" @keyup.enter.ctrl="add">
+      </textarea>
+
+
+
+
 
     <!--//还有问题：初始化时间；每个框内显示星期几；空白处显示时间；时间选择框放到合适位置-->
   </div>
 </template>
 
 <script>
+  import axios from "axios";
 import List from "./schedule/List.vue";
 export default {
   name: "Schedule",
   data() {
     return {
       value1: new Date(),
+      note:""
     };
   },
   props: [],
@@ -42,18 +50,42 @@ export default {
     List,
   },
   methods: {
-    backimage(){
-        
-        window.location.replace("http://124.71.219.191/");
-
-      },
-
-      back(){
-        this.$router.back()
-      },
-    
-    
+    add(){
+      var that = this;
+      axios
+        .post(window.a+"/api/note", {
+          'data':that.note,
+        })
+        .then(function (response) {
+          if (response.data.ret == 0) {
+            alert("保存成功");
+          } else if (response.data.ret == 302) {
+            alert("未登录");
+            that.$router.push("signin");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   },
+
+  mounted() {
+    var that = this;
+    axios
+      .get(window.a+"/api/note")
+      .then(function (value) {
+        that.note = value.data.retlist
+        console.log(value)
+      })
+      .catch(function (reason) {
+        console.log(reason);
+      });
+  },
+
+
+
+
 
   computed: {
     //因为要显示一周的内容，如果只是在日期上加的话可能会有问题，所以要将日期转化为周。再到list中将周转化为日期，
@@ -171,25 +203,15 @@ export default {
   left: 60px;
 }
 
-#dimage3 {
-    position: absolute;
+textarea{
+  position: absolute;
+  top:375px;
+  left: 300px;
+  border: 2px solid black;
+  background-color:inherit;
+  font-family: "汇文明朝体", "SimSun";
+  font-size: 16px;
+}
 
-    width: 30px;
-    height: 30px;
-    top: 10px;
-    left: 1240px;
-
-  }
-
-
-  #dimage4 {
-    position: absolute;
-
-    width: 30px;
-    height: 30px;
-    top: 50px;
-    left: 1240px;
-
-  }
 
 </style>

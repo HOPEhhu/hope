@@ -10,7 +10,8 @@ from hope.models import Excerpt, Schedule, Webmark
 from hope.models import Book
 from django.contrib.auth import authenticate, login, logout
 import os
-import mammoth
+import markdown
+import codecs
 
 # Create your views here.
 
@@ -50,10 +51,36 @@ def schedule(request):
         return checkschedule(request)
     elif action == 'del_schedule':
         return delschedule(request)
+    elif action =='modify_schedule':
+        return modifyschedule(request)
 
     else:
         return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
+def modifyschedule(request):
+    if 'usertype' not in request.session:
+        return JsonResponse({
+            'ret': 302,
+           })
+    # 从请求消息中 获取修改客户的信息
+    # 找到该客户，并且进行修改操作
+    scheduleid = request.params['id']
+    newdata = request.params['newdata']
+
+    try:
+        # 根据 id 从数据库中找到相应的客户记录
+        schedule = Schedule.objects.get(id=scheduleid)
+    except Schedule.DoesNotExist:
+        return {
+            'ret': 1,
+        }
+    if 'remark' in newdata:
+        schedule.remark = newdata['remark']
+
+    # 注意，一定要执行save才能将修改信息保存到数据库
+    schedule.save()
+
+    return JsonResponse({'ret': 0})
 
 def listschedule(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
@@ -69,7 +96,6 @@ def listschedule(request):
 
     return JsonResponse({'ret': 0, 'retlist': retlist})
 
-
 def addschedule(request):
     if 'usertype' not in request.session:
         return JsonResponse({
@@ -79,7 +105,6 @@ def addschedule(request):
     record = Schedule.objects.create(
         scheduledata=info['time'], content=info['content'], finish=False)
     return JsonResponse({'ret': 0, 'id': record.id})
-
 
 def checkschedule(request):
     if 'usertype' not in request.session:
@@ -102,7 +127,6 @@ def checkschedule(request):
     todo.save()
 
     return JsonResponse({'ret': 0})
-
 
 def delschedule(request):
     if 'usertype' not in request.session:
@@ -145,7 +169,6 @@ def book(request):
     else:
         return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
-
 def listbook(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
     qs = Book.objects.values()
@@ -155,7 +178,6 @@ def listbook(request):
     retlist = list(qs)
 
     return JsonResponse({'ret': 0, 'retlist': retlist})
-
 
 def addbook(request):
     if 'usertype' not in request.session:
@@ -174,7 +196,6 @@ def addbook(request):
                                  remark=info['remark'])
 
     return JsonResponse({'ret': 0, 'id': record.id})
-
 
 def modifybook(request):
     if 'usertype' not in request.session:
@@ -209,7 +230,6 @@ def modifybook(request):
 
     return JsonResponse({'ret': 0})
 
-
 def delbook(request):
     if 'usertype' not in request.session:
         return JsonResponse({
@@ -231,7 +251,6 @@ def delbook(request):
 
     return JsonResponse({'ret': 0})
 
-
 def signin(request):
     userName = request.POST.get('name')
     passWord = request.POST.get('password')
@@ -250,29 +269,29 @@ def docx1(request):
     name1=request.GET['name']  #要显示文件的名字
     
     if(sort11=="cv"): #判断文章类别
-        with open("/home/hope/web2/file/cv/"+name1, "rb") as docx_file:
-            result = mammoth.convert_to_html(docx_file)  #将文章转换为html格式
-            html = result.value # The generated HTML
+        input_file = codecs.open("/home/web2/file/cv/"+name1, mode="r", encoding="utf-8")
+        text = input_file.read()
+        html = markdown.markdown(text)
         return JsonResponse({'ret': 0, 'retlist': html})
     elif(sort11=="Python"):
-        with open("/home/hope/web2/file/Python/"+name1, "rb") as docx_file:
-            result = mammoth.convert_to_html(docx_file)
-            html = result.value # The generated HTML
+        input_file = codecs.open("/home/web2/file/Python/"+name1, mode="r", encoding="utf-8")
+        text = input_file.read()
+        html = markdown.markdown(text)
         return JsonResponse({'ret': 0, 'retlist': html})
     elif(sort11=="hardware"):
-        with open("/home/hope/web2/file/hardware/"+name1, "rb") as docx_file:
-            result = mammoth.convert_to_html(docx_file)
-            html = result.value # The generated HTML
+        input_file = codecs.open("/home/web2/file/hardware/"+name1, mode="r", encoding="utf-8")
+        text = input_file.read()
+        html = markdown.markdown(text)
         return JsonResponse({'ret': 0, 'retlist': html})
     elif(sort11=="web"):
-        with open("/home/hope/web2/file/web/"+name1, "rb") as docx_file:
-            result = mammoth.convert_to_html(docx_file)
-            html = result.value # The generated HTML
+        input_file = codecs.open("/home/web2/file/web/"+name1, mode="r", encoding="utf-8")
+        text = input_file.read()
+        html = markdown.markdown(text)
         return JsonResponse({'ret': 0, 'retlist': html})
     elif(sort11=="writing"):
-        with open("/home/hope/web2/file/writing/"+name1, "rb") as docx_file:
-            result = mammoth.convert_to_html(docx_file)
-            html = result.value # The generated HTML
+        input_file = codecs.open("/home/web2/file/writing/"+name1, mode="r", encoding="utf-8")
+        text = input_file.read()
+        html = markdown.markdown(text)
         return JsonResponse({'ret': 0, 'retlist': html})
     else:
         return JsonResponse({'ret': 1})
@@ -284,27 +303,27 @@ def sort1(request):
 
     sort11=request.GET['sort'] #要显示的目录
     if(sort11=='cv'):  #判断类别
-        for x in os.walk("/home/hope/web2/file/cv"):  #获取文件夹中的文件目录
+        for x in os.walk("/home/web2/file/cv"):  #获取文件夹中的文件目录
             list=x[2]
         for id,value in enumerate(list): #文件目录为列表，将目录加上序号。
             list[id]={"id":id,"name":value}  
     elif(sort11=="Python"):
-        for x in os.walk("/home/hope/web2/file/Python"):
+        for x in os.walk("/home/web2/file/Python"):
             list=x[2]
         for id,value in enumerate(list):
             list[id]={"id":id,"name":value} 
     elif(sort11=="hardware"):
-        for x in os.walk("/home/hope/web2/file/hardware"):
+        for x in os.walk("/home/web2/file/hardware"):
             list=x[2]
         for id,value in enumerate(list):
             list[id]={"id":id,"name":value} 
     elif(sort11=="web"):
-        for x in os.walk("/home/hope/web2/file/web"):
+        for x in os.walk("/home/web2/file/web"):
             list=x[2]
         for id,value in enumerate(list):
             list[id]={"id":id,"name":value} 
     elif(sort11=="writing"):
-        for x in os.walk("/home/hope/web2/file/writing"):
+        for x in os.walk("/home/web2/file/writing"):
             list=x[2]
         for id,value in enumerate(list):
             list[id]={"id":id,"name":value} 
@@ -336,7 +355,6 @@ def excerpt(request):
     else:
         return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
-
 def listexcerpt(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
     qs = Excerpt.objects.values()
@@ -346,7 +364,6 @@ def listexcerpt(request):
     retlist = list(qs)
 
     return JsonResponse({'ret': 0, 'retlist': retlist})
-
 
 def addexcerpt(request):
     if 'usertype' not in request.session:
@@ -361,7 +378,6 @@ def addexcerpt(request):
     record = Excerpt.objects.create(content=info['content'])
 
     return JsonResponse({'ret': 0, 'id': record.id})
-
 
 def modifyexcerpt(request):
     if 'usertype' not in request.session:
@@ -387,7 +403,6 @@ def modifyexcerpt(request):
     excerpt.save()
     return JsonResponse({'ret': 0})
 
-
 def delexcerpt(request):
     if 'usertype' not in request.session:
         return JsonResponse({
@@ -406,9 +421,7 @@ def delexcerpt(request):
     return JsonResponse({'ret': 0})
 
 
-
 #网站
-
 def webmark(request):
     # 将请求参数统一放入request 的 params 属性中，方便后续处理
     # GET请求 参数在url中，同过request 对象的 GET属性获取
@@ -432,7 +445,6 @@ def webmark(request):
     else:
         return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
-
 def listweb(request):
     # 返回一个 QuerySet 对象 ，包含所有的表记录
     qs = Webmark.objects.values()
@@ -442,7 +454,6 @@ def listweb(request):
     retlist = list(qs)
 
     return JsonResponse({'ret': 0, 'retlist': retlist})
-
 
 def addweb(request):
     if 'usertype' not in request.session:
@@ -457,7 +468,6 @@ def addweb(request):
     record = Webmark.objects.create(webname=info['webname'],weburl=info['weburl'])
 
     return JsonResponse({'ret': 0, 'id': record.id})
-
 
 def modifyweb(request):
     if 'usertype' not in request.session:
@@ -485,7 +495,6 @@ def modifyweb(request):
     webmark.save()
     return JsonResponse({'ret': 0})
 
-
 def delweb(request):
     if 'usertype' not in request.session:
         return JsonResponse({
@@ -504,3 +513,18 @@ def delweb(request):
     return JsonResponse({'ret': 0})
 
 
+#笔记本
+def note(request):
+    if request.method == 'GET':
+        with open("/home/web2/file/notebook.txt", "r") as f:  # 打开文件
+            data = f.read()  # 读取文件
+            return JsonResponse({'ret': 0, 'retlist': data})
+    elif request.method == 'POST':
+        if 'usertype' not in request.session:
+            return JsonResponse({
+                'ret': 302,
+           })
+        with open("/home/web2/file/notebook.txt","w") as f:
+            request.params = json.loads(request.body)
+            f.write(request.params['data'])  # 自带文件关闭功能，不需要再写f.close()
+            return JsonResponse({'ret': 0,})

@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
 from hope.views import *
@@ -25,5 +26,6 @@ urlpatterns = [
     path('api/docx',docx1),  #文章内容详情
     path('api/sort',sort1),  #文章目录
     path('api/excerpt',excerpt), #摘录
-    path('api/web', webmark) #网站
+    path('api/web', webmark), #网站
+    path('api/note', note)
 ]
